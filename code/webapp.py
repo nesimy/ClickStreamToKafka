@@ -44,7 +44,7 @@ def processinput():
             payload = dumps(raw_payload)
             print(payload)
             session['BUTTON_PRESSED'] = button_pressed
-            app.config['PRODUCER'].produce(payload, partition_key=button_pressed)
+            app.config['PRODUCER'].produce(payload.encode(), partition_key=button_pressed.encode())
     return redirect('/')
 
 if __name__ == '__main__':
