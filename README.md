@@ -1,2 +1,1 @@
-# ClickStreamToKafka
 ClickStreamToKafka
