@@ -7,16 +7,14 @@ apt-get -qq install --no-install-recommends -y \
   ca-certificates build-essential locales      \
   librdkafka-dev libev-dev libsnappy-dev zlib1g-dev netcat-traditional
 echo 'Downloading Anaconda ...'
-# wget -qO /opt/Anaconda.sh \
-#          https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
-wget -qO /opt/Anaconda.sh http://192.168.0.13/AnacondaForPython3.sh
+wget -qO /opt/Anaconda.sh \
+         https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
 echo 'Installing Anaconda ...'
 cd /opt
 bash Anaconda.sh -b -p /opt/anaconda
 rm /opt/Anaconda.sh
 mv /opt/anaconda/bin/sqlite3 /opt/anaconda/bin/sqlite3.orig
 echo 'Installing pykafka ...'
-# PATH=/opt/anaconda/bin:$PATH pip install pykafka
 pip install pykafka
 echo 'Getting code from GitHub ...'
 cd /opt
