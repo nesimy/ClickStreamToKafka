@@ -1,17 +1,16 @@
 # KAFKA_BROKER=localhost:9092 FLASK_PORT=9999 python webapp.py
 
-from gevent.wsgi          import WSGIServer
-from os                   import getenv
-from uuid                 import uuid1
-from json                 import dumps
-from pykafka.partitioners import hashing_partitioner
-from pykafka              import KafkaClient as KC
-from datetime             import datetime    as dt
-from flask                import ( render_template as rt
-                                 , Flask
-                                 , request
-                                 , redirect
-                                 , session )
+from gevent.wsgi     import WSGIServer
+from os              import getenv
+from uuid            import uuid1
+from json            import dumps
+from confluent_kafka import Producer as KPR
+from datetime        import datetime    as dt
+from flask           import ( render_template as rt
+                            , Flask
+                            , request
+                            , redirect
+                            , session )
 
 POSSIBLE_SIGNALS = \
     [ 'aaa', 'aaaa', 'aaaaa', 'aaaaaa'
@@ -44,18 +43,15 @@ def processinput():
             payload = dumps(raw_payload)
             print(payload)
             session['BUTTON_PRESSED'] = button_pressed
-            app.config['PRODUCER'].produce(payload.encode(), partition_key=button_pressed.encode())
+            app.config['PRODUCER'].produce(b'raw', key=button_pressed.encode(), value=payload.encode())
+            app.config['PRODUCER'].flush()
     return redirect('/')
 
 if __name__ == '__main__':
     kafka_broker = getenv('KAFKA_BROKER', 'localhost:9092')
-    kafka_client = KC(hosts=kafka_broker)
-    test_topic = kafka_client.topics[b'raw']
-    app.config['PRODUCER'] = \
-        test_topic.get_sync_producer(partitioner=hashing_partitioner)
-    app.config['SECRET_KEY'] = getenv( 'SECRET_SESSION_KEY'
-                                     , str( uuid1() ) )
-    flask_port = int( getenv('FLASK_PORT') )
-    http_server = WSGIServer( ('', flask_port), app )
+    app.config['PRODUCER'] = KPR({'bootstrap.servers': kafka_broker})
+    app.config['SECRET_KEY'] = getenv('SECRET_SESSION_KEY', str(uuid1()))
+    flask_port = int(getenv('FLASK_PORT'))
+    http_server = WSGIServer(('', flask_port), app)
     http_server.serve_forever()
 
