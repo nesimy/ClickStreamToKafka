@@ -43,7 +43,7 @@ def processinput():
             payload = dumps(raw_payload)
             print(payload)
             session['BUTTON_PRESSED'] = button_pressed
-            app.config['PRODUCER'].produce(b'raw', key=button_pressed.encode(), value=payload.encode())
+            app.config['PRODUCER'].produce('raw', key=button_pressed.encode(), value=payload.encode())
             app.config['PRODUCER'].flush()
     return redirect('/')
 
