@@ -1,4 +1,4 @@
-`docker run --rm --net=host -it dserban/clickstreamtokafka bash`
+`docker run --rm --net=host -v /tmp:/tmp -it dserban/clickstreamtokafka bash`
 ```
 cd /opt/ClickStreamToKafka/code
 
