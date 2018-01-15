@@ -23,7 +23,7 @@ rm /opt/librdkafka.tgz
 mv /opt/librdkafka* /opt/librdkafka
 echo 'Building librdkafka ...'
 cd /opt/librdkafka
-./configure
+./configure --prefix=/usr
 make
 make install
 cd /opt
