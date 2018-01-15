@@ -37,7 +37,7 @@ def processinput():
         button_pressed = buttons_pressed_as_list[0]
         if button_pressed in POSSIBLE_SIGNALS_AS_SET:
             real_ip_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-            tstamp_str = dt.now().isoformat().replace('T',' ')
+            tstamp_str = dt.now().isoformat(' ')
             raw_payload = { 'ip_token': '{}_{}'.format(real_ip_addr,button_pressed)
                           , 'tstamp': tstamp_str }
             payload = dumps(raw_payload)
